@@ -8,6 +8,17 @@ class MoviesController < ApplicationController
   
     def index
       @movies = Movie.all
+      session.clear unless request.url.include? "/movies"
+      if params[:home] == '1'
+        session[:header] = params[:header]
+        session[:ratings] = params[:ratings]
+      end
+      ratings = params[:ratings] || session[:ratings]
+      header = params[:header] || session[:header]
+      @movies = Movie.with_ratings(ratings, header: header)
+      @all_ratings = Movie.all_ratings
+      @ratings_to_show = ratings.present? ? @movies.map(&:rating).uniq : []
+      @color_header = header
     end
   
     def new
