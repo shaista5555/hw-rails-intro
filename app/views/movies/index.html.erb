@@ -8,7 +8,6 @@
   <%= rating %>
   <%= check_box_tag "ratings[#{rating}]", rating, if @ratings_filter; @ratings_filter.include?(rating) end, :id => "ratings_#{rating}" %>
   <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
-<%end%>
   
 <table class="table table-striped col-md-12" id="movies">
   <thead>
