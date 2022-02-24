@@ -6,7 +6,7 @@
   Include:
   <%= @all_ratings.each do |rating| %>
     <%= rating %>
-    <%= check_box_tag "ratings[#{rating}]", rating, if @ratings_filter; @ratings_filter.include?(rating) end, :id => "ratings_#{rating}" %>
+    <%= check_box_tag "ratings[#{rating}]", 1, if @ratings_filter; @ratings_filter.include?(rating) end, :id => "ratings_#{rating}" %>
   <% end %>
   <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
 <%end%>
