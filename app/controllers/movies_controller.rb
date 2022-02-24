@@ -7,17 +7,11 @@ class MoviesController < ApplicationController
     end
   
     def index
-      session.clear unless request.url.include? "/movies"
-      if params[:home] == '1'
-        session[:header] = params[:header]
-        session[:ratings] = params[:ratings]
+      if params[:sort_by]
+        @movies = Movie.all.order(params[:sort_by])
+      else
+        @movies = Movie.all
       end
-      ratings = params[:ratings] || session[:ratings]
-      header = params[:header] || session[:header]
-      @movies = Movie.with_ratings(ratings, header: header)
-      @all_ratings = Movie.all_ratings
-      @ratings_to_show = ratings.present? ? @movies.map(&:rating).uniq : []
-      @color_header = header
     end
   
     def new
