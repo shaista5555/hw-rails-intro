@@ -12,12 +12,10 @@ class MoviesController < ApplicationController
       else
         @movies = Movie.all
       end
-      
       @all_ratings = Movie.all_ratings
       if params[:ratings]
         @ratings_filter = params[:ratings].keys
       end
-      
     end
   
     def new
