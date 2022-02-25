@@ -7,18 +7,35 @@ class MoviesController < ApplicationController
     end
   
     def index
-      @movies = Movie.all
-      if params[:sort_by]
-        @movies = @movies.order(params[:sort_by])
-      else
-        @movies = @movies
+      if not params[:home]
+        session.clear
       end
+
+    if(params[:sort_by].nil? && params[:ratings].nil? && !params.has_key?(:commit) && params[:home])
+      if(!session[:sort_by].nil? || !session[:ratings].nil?)
+        redirect_to movies_path(:sort_by=>session[:sort_by], :ratings=>session[:ratings], :home => true)
+
+      end
+    end
+
+      @sort = params[:sort_by]
       @all_ratings = Movie.all_ratings
-      @ratings_filter = @all_ratings
-      if params[:ratings]
-        @ratings_filter = params[:ratings].keys
-        @movies = @movies.where(rating: @ratings_filter)
+
+    
+      if params[:ratings].nil?
+        @ratings_filter = @all_ratings
+        @movies = Movie.all
+      else
+
+        @ratings_filter = params[:ratings]
       end
+
+      @movies = Movie.with_ratings(@ratings_filter, @sort)
+      session[:ratings] = params[:ratings]
+      # end
+    session[:sort_by] = @sort
+    session[:home] = false
+
     end
   
     def new
@@ -55,4 +72,4 @@ class MoviesController < ApplicationController
     def movie_params
       params.require(:movie).permit(:title, :rating, :description, :release_date)
     end
-  end
+end
