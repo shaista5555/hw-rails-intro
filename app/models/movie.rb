@@ -14,12 +14,12 @@ class Movie < ActiveRecord::Base
     end
     
     def self.with_ratings(ratings_list, sort)
-        if ratings_list.is_a? Array
-            movies = self.where( { rating: ratings_list }).order(sort)
-        else
-            ratings_list_keys = ratings_list.keys
-            movies = self.where( { rating: ratings_list_keys }).order(sort)
-        end
+        # if ratings_list.is_a? Array
+        movies = self.where( { rating: ratings_list }).order(sort)
+        # else
+            # ratings_list_keys = ratings_list.keys
+            # movies = self.where( { rating: ratings_list_keys }).order(sort)
+        # end
         return movies
     end
 end

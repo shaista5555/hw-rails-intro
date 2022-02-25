@@ -7,34 +7,36 @@ class MoviesController < ApplicationController
     end
   
     def index
-      if not params[:home]
-        session.clear
+      session.clear unless request.url.include? "/movies"
+      
+      session[:ratings] = params[:ratings] if params[:ratings] != nil
+      session[:sort_by] = params[:sort_by] if params[:sort_by] != nil
+      # session[:home] = false
+      
+      if(params[:sort_by].nil? && params[:ratings].nil?)
+        if(!session[:sort_by].nil? && !session[:ratings].nil?)
+          redirect_to movies_path(:sort_by=>session[:sort_by], :ratings=>session[:ratings], :home => true)
+        elsif(!session[:sort_by].nil?)
+          redirect_to movies_path(:sort_by=>session[:sort_by], :home => true)
+        elsif(!session[:ratings].nil?)
+          redirect_to movies_path(:ratings=>session[:ratings], :home => true)
+        end
+      elsif(params[:sort_by].nil? && !session[:sort_by].nil?)
+        redirect_to movies_path(:sort_by=>session[:sort_by], :ratings=>params[:ratings], :home => true)
+      elsif(params[:ratings].nil? && !session[:ratings].nil?)
+        redirect_to movies_path(:ratings=>session[:ratings], :sort_by=>params[:sort_by], :home => true)
       end
-
-    if(params[:sort_by].nil? && params[:ratings].nil? && !params.has_key?(:commit) && params[:home])
-      if(!session[:sort_by].nil? || !session[:ratings].nil?)
-        redirect_to movies_path(:sort_by=>session[:sort_by], :ratings=>session[:ratings], :home => true)
-
-      end
-    end
-
+      
       @sort = params[:sort_by]
       @all_ratings = Movie.all_ratings
-
     
       if params[:ratings].nil?
         @ratings_filter = @all_ratings
-        @movies = Movie.all
       else
-
-        @ratings_filter = params[:ratings]
+        @ratings_filter = params[:ratings].keys
       end
-
+      
       @movies = Movie.with_ratings(@ratings_filter, @sort)
-      session[:ratings] = params[:ratings]
-      # end
-    session[:sort_by] = @sort
-    session[:home] = false
 
     end
   
