@@ -13,8 +13,10 @@ class MoviesController < ApplicationController
         @movies = Movie.all
       end
       @all_ratings = Movie.all_ratings
+      @ratings_filter = @all_ratings
       if params[:ratings]
         @ratings_filter = params[:ratings].keys
+        @movies = Movie.where(rating: @ratings_filter)
       end
     end
   
