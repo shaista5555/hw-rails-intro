@@ -10,7 +10,7 @@ class Movie < ActiveRecord::Base
     #     return self.where(rating: ratings).order(header) if header.present?
     # end
     def self.all_ratings
-        ['G','PG','PG-13','R']
+        self.select(:rating).map(&:rating).uniq
     end
     
     def self.with_ratings(ratings_list, sort)
